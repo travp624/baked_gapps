@@ -7,6 +7,7 @@
 list_files() {
 cat <<EOF
 app/PlusOne.apk
+lib/libfilterframework_jni.so
 lib/libmoviemaker-jni.so
 lib/libnetjni.so
 lib/libplus_jni_v8.so
@@ -48,6 +49,6 @@ case "$1" in
     # Stub
   ;;
   post-restore)
-	# Stub
+    # Stub
 ;;
 esac

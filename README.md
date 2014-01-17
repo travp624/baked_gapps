@@ -1,16 +1,8 @@
-Famigo AROMA GApps
+BAKED AROMA GApps (borrowed from famigo) ** huge thanks to team famigo
 =======
 What is it?
 ------
 A full featured GApps package that you can select what apps you want to install using AROMA. You can also remove some system apps that come preinstalled with your ROM.
-
-What isn't it?
-------
-A slimmed down GApps (unless you install the Slim version). While you can slim down your ROM by not installing all the GApps or removing extra bloat with the Removal Tool, you will have a bigger download up front.
-
-Slim Version
-------
-The Slim version has all the removal functionality that the normal one has; but it only includes Google Now, Google Home, and the Core Apps.
 
 Google Apps
 ------------
@@ -46,7 +38,7 @@ With our GApps, you can also remove some pre-installed apps that you may not use
 
 How to Install
 ------------
-1. Download a 4.3 or 4.4 ROM.
+1. Download a 4.4 ROM.
 2. Download our GApps.
 3. Reboot into your custom recovery.
   * I recommend TWRP if possible.

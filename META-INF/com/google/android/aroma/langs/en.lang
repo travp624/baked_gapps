@@ -1,6 +1,6 @@
 ### LANGUAGE STRING RESOURCE FILE
-#	Language: 	English
-#	By: 		Brandon Giesing
+#   Language:   English
+#   By:         Brandon Giesing
 
 # COMMON SYSTEM STRING RESOURCE
 text_ok=OK
@@ -13,5 +13,5 @@ text_quit=Quit Install
 text_quit_msg=Are you sure to quit the install?
 
 # Welcome Text
-welcome.title=Welcome to Famigo AROMA GApps
+welcome.title=Welcome to BAKED AROMA GApps
 welcome.next=Press Next to Continue...

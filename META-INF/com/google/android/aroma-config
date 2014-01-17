@@ -1,40 +1,40 @@
 # Mount System
-	run_program("/sbin/busybox", "mount", "/system");
+    run_program("/sbin/busybox", "mount", "/system");
 
 # Theme and Size
-	# Set Roboto Condensed as Font
-		fontresload( "0", "ttf/RobotoCondensed-Regular.ttf", "15" );
-		fontresload( "1", "ttf/RobotoCondensed-Regular.ttf", "17" );
-	# Use ICS Theme
-		theme("ics");
-	# Set DPI
-		ini_set("dp","5");
-	# Load English
-		loadlang("langs/en.lang");
+    # Set Roboto Condensed as Font
+        fontresload( "0", "ttf/RobotoCondensed-Regular.ttf", "15" );
+        fontresload( "1", "ttf/RobotoCondensed-Regular.ttf", "17" );
+    # Use ICS Theme
+        theme("ics");
+    # Set DPI
+        ini_set("dp","5");
+    # Load English
+        loadlang("langs/en.lang");
 
 # Initializing Info
-	ini_set("rom_name",		"Famigo AROMA GApps");
-	ini_set("rom_author",	"Team Famigo");
-	ini_set("rom_device",	"Any ROM & Any Device");
+    ini_set("rom_name",     "BAKED AROMA GApps");
+    ini_set("rom_author",   "TeamBAKED");
+    ini_set("rom_device",   "Any ROM & Any Device");
 
 # Menu
-	menubox(
-		"<~welcome.title>",
-		"What would you like to do?",
-		"",
-		"home.prop",
-		"Backup",			"",		"",
-		"Restore",			"",		"",
-		"App Selection",	"",		"",
-		"Remover",			"",		"",
-		"Install",			"",		""
-	);
+    menubox(
+        "<~welcome.title>",
+        "What would you like to do?",
+        "",
+        "home.prop",
+        "Backup",           "",     "",
+        "Restore",          "",     "",
+        "App Selection",    "",     "",
+        "Remover",          "",     "",
+        "Install",          "",     ""
+    );
 
 # Backup and Restore
-	include("backup.edify");
+    include("backup.edify");
 # App Selection
-	include("gapps.edify");
+    include("gapps.edify");
 # Remover
-	include("remover.edify");
+    include("remover.edify");
 # Start Install
-	include("install.edify");
+    include("install.edify");
