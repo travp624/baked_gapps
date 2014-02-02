@@ -1,6 +1,12 @@
 # Force colorspace
     ini_set("force_colorspace","rgba");
 
+# Initializing Info
+    ini_set("rom_name",     "BAKED AROMA GApps");
+    ini_set("rom_author",   "TeamBAKED");
+    ini_set("rom_version",  "kk-1.1");
+    ini_set("rom_device",   "Any ROM & Any Device");
+
 # Mount System
     run_program("/sbin/busybox", "mount", "/system");
 
@@ -13,80 +19,18 @@ splash(
     "splash/teambaked"
 );
 
-# Theme and Size
-    # Set Roboto Condensed as Font
-        fontresload( "0", "ttf/RobotoCondensed-Regular.ttf", "15" );
-        fontresload( "1", "ttf/RobotoCondensed-Regular.ttf", "17" );
-    # Set DPI
-        ini_set("dp","5");
-    # Load English
-        loadlang("langs/en.lang");
+# Set Roboto Condensed as Font
+    fontresload( "0", "ttf/RobotoCondensed-Regular.ttf", "15" );
+    fontresload( "1", "ttf/RobotoCondensed-Regular.ttf", "17" );
 
+# Use baked Theme
+    theme("baked");
 
+# Set DPI
+    ini_set("dp","5");
 
-
-###################################################################################################################
-#
-# STEP 1 - SELECT THEME
-#
-selectbox(
-  #-- Title
-    "Select Theme for AROMA",
-
-  #-- Sub Title
-    "Themes",
-
-  #-- Icon: <AROMA Resource Dir>/icons/personalize.png or <ThemeDir>/icon.personalize.png
-    "@personalize",
-
-  #-- Will be saved in /tmp/aroma/theme.prop
-    "theme.prop",
-
-  #---------------------------------[ Selectbox Without Group ]----------------------------------#
-  # TITLE            |  SUBTITLE                                                 | Initial Value #
-  #------------------+-----------------------------------------------------------+---------------#
-
-    "Generic",            "Unthemed AROMA Installer",                                    1,      #-- selected.0 = 1
-    "MIUI Theme",         "MIUI Theme by mickey-r & amarullz",                           0,      #-- selected.0 = 2
-    "ICS Theme",          "Ice Cream Sandwitch by DemonWav & amarullz",                  0,      #-- selected.0 = 3
-    "MIUI 4 Theme",       "MIUI 4/ICS Theme by amarullz & Lennox",                       0,      #-- selected.0 = 4
-    "Touchwiz",           "Touchwiz Theme by titanic_fanatic",                           0,      #-- selected.0 = 5
-    "Franzyroy",          "Franzyroy Theme by franzyroy",                                0       #-- selected.0 = 6
-
-  #--------[ Initial Value = 0: Unselected, 1: Selected, 2: Group Item, 3: Not Visible ]---------#
-);
-
-##
-# SET THEME
-#
-#-- Change Info:
-# file_getprop : should use absolute path "/tmp/aroma/theme.prop"
-# prop         : just use relative path "theme.prop" will automatically read the "/tmp/aroma/theme.prop"
-#
-if prop("theme.prop","selected.0")=="2" then
-  theme("miui");
-endif;
-
-if prop("theme.prop","selected.0")=="3" then
-  theme("ics");
-endif;
-
-if prop("theme.prop","selected.0")=="4" then
-  theme("miui4");
-endif;
-
-if prop("theme.prop","selected.0")=="5" then
-  theme("touchwiz");
-endif;
-
-if prop("theme.prop","selected.0")=="6" then
-  theme("franzyroy");
-endif;
-
-# Initializing Info
-    ini_set("rom_name",     "BAKED AROMA GApps");
-    ini_set("rom_author",   "TeamBAKED");
-    ini_set("rom_device",   "Any ROM & Any Device");
+# Load English
+    loadlang("langs/en.lang");
 
 # Menu
     menubox(
@@ -109,3 +53,28 @@ endif;
     include("remover.edify");
 # Start Install
     include("install.edify");
+
+# Set Next Text fo Finish
+ini_set("text_next", "Finish");
+
+viewbox(
+  "Installation Completed",
+  "<#c00>Congratulations...</#>\n\n"+
+  "<#c00>" + ini_get("rom_name") + "</#>\n\n"+
+  "<#c00>" + ini_get("rom_version") + "</#>\n\n"+
+  "has been installed successfully.\n\n\n"+
+  "Press Finish, and Reboot your phone.\n\nThanks",
+  "icons/info"
+);
+
+if
+  confirm(
+      "Reboot",
+      "Reboot Now",
+      "icons/info",
+      "Reboot",
+      "No"
+  )=="yes"
+then
+  reboot("onfinish");
+endif;

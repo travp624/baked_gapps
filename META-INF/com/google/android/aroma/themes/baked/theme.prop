@@ -1,0 +1,68 @@
+img.background        = bg
+img.titlebar          = titlebar.9
+img.navbar            = nav.9
+img.dialog            = dialog.9
+img.dialog.titlebar   = dialog_titlebar.9
+img.progress          = button.9
+img.prograss.fill     = button_focus.9
+img.selection         = select.9
+img.selection.push    = select_push.9
+img.button            = button.9
+img.button.focus      = button_focus.9
+img.button.push       = button_press.9
+img.checkbox          = cb
+img.checkbox.focus    = cb_sel
+img.checkbox.push     = cb
+img.checkbox.on       = cb_on
+img.checkbox.on.focus = cb_on_sel
+img.checkbox.on.push  = cb_on
+img.radio             = radio
+img.radio.focus       = radio_sel
+img.radio.push        = radio
+img.radio.on          = radio_on
+img.radio.on.focus    = radio_on_sel
+img.radio.on.push     = radio_on
+
+
+color.winbg           = #000000
+color.winbg_g         = #101010
+color.winfg           = #efefef
+color.winfg_gray      = #afafaf
+color.dialogbg        = #010101
+color.dialogbg_g      = #202020
+color.dialogfg        = #efefef
+color.textbg          = #000000
+color.textfg          = #efefef
+color.textfg_gray     = #afafaf
+color.controlbg       = #0f0f0f
+color.controlbg_g     = #303030
+color.controlfg       = #cfcfcf
+color.selectbg        = #303030
+color.selectbg_g      = #464646
+color.selectfg        = #ffffff
+color.titlebg         = #2f2f2f
+color.titlebg_g       = #101010
+color.titlefg         = #efefef
+color.dlgtitlebg      = #1f1f1f
+color.dlgtitlebg_g    = #303030
+color.dlgtitlefg      = #ffffff
+color.scrollbar       = #2f2f2f
+color.navbg           = #000000
+color.navbg_g         = #202020
+color.border          = #404040
+color.border_g        = #505050
+color.progressglow    = #afafaf
+
+
+config.roundsize             = 2
+config.button_roundsize      = 2
+config.window_roundsize      = 2
+config.transition_frame      = 6
+
+font.small            = font.roboto.small
+font.big              = font.roboto.big
+
+
+info.themename        = TeamBaked
+info.description      = Baked Theme for AROMA Installer
+info.author           = travp624

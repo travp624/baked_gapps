@@ -316,7 +316,7 @@ ui_print("  AOSP");
     if file_getprop("/tmp/aroma/remover.prop", "item.1.5")=="1" then
         ui_print("      Music");
         delete("/system/app/Music.apk","/system/priv-app/Music.apk");
-        package_extract_file("addon.d/remover/71-gallery.sh", "/system/addon.d/71-gallery.sh");
+        package_extract_file("addon.d/remover/71-music.sh", "/system/addon.d/71-music.sh");
     endif;
 
     if file_getprop("/tmp/aroma/remover.prop", "item.1.6")=="1" then
