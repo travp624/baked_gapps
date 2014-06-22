@@ -1,0 +1,117 @@
+# MOUNTING
+    exec("/sbin/busybox","mount","/system");
+    exec("/sbin/busybox","mount","/data");
+    exec("/sbin/busybox", "mkdir", "/sdcard/Baked");
+    exec("/sbin/busybox", "mkdir", "/sdcard/Baked/backups");
+    exec("/sbin/busybox", "mkdir", "/sdcard/Baked/logs");
+
+# Use baked Theme
+    theme("baked");
+
+# STYLING
+    # Set Font
+        fontresload( "0", "ttf/Roboto.ttf", "12" );
+        fontresload( "1", "ttf/Roboto.ttf", "18" );
+    # Set DPI
+        ini_set("dp","5");
+    # Load English
+        loadlang("langs/en.lang");
+
+# INFO
+    ini_set("rom_name", "Baked gapps");
+    ini_set("rom_author",   "TeamBAKED");
+    ini_set("rom_device",   "Any 4.4.x ROM/Device");
+textbox("Baked gapps", "", "", zipread("README.md"));
+
+# RESTORE
+ini_set("text_yes", "RESTORE");
+ini_set("text_no",  "DON'T RESTORE");
+    if
+        confirm("RESTORE", "Do you want to Restore your Selections?")=="yes"
+    then
+        exec("/sbin/busybox", "cp", "/sdcard/Baked/backups/gapps.prop", "/tmp/aroma/");
+        exec("/sbin/busybox", "cp", "/sdcard/Baked/backups/replacer.prop", "/tmp/aroma/");
+    else
+        sleep(0)
+    endif;
+
+# GAPPS
+checkbox("GAPPS", "Select your apps below:", "", "gapps.prop",
+    "Plus",     "", "2",
+        "Google+",  "", "0",
+        "Hangouts", "", "0",
+    "Drive",    "", "2",
+        "Drive",    "", "0",
+        "Keep",     "", "0",
+    "Play",     "", "2",
+        "Books",    "", "0",
+        "Games",    "", "0",
+        "Movies & TV",  "", "0",
+        "Music",    "", "0",
+        "Newsstand",    "", "0",
+        "Voice",    "", "0",
+    "Search",   "", "2",
+        "Chrome",   "", "1",
+        "Home",     "Installs Now", "1",
+        "Maps",     "", "0",
+        "Now",      "", "1",
+    "Other",    "", "2",
+        "Calendar", "", "0",
+        "Camera",   "", "1",
+        "Gmail",    "", "0",
+        "Keyboard", "Removes AOSP Keyboard",    "1",
+        "Wallet",   "", "0",
+        "YouTube",  "", "0"
+);
+
+# REPLACER
+checkbox("REPLACER", "WARNING: Do not select one of these if you didn't install another version!", "", "replacer.prop",
+    "SMS",  "Replace Stock SMS with Hangouts?", "0",
+    "Browser","Replace Stock Browser with Chrome?", "1",
+    "Home","Replace Stock Launcher with Google Now Launcher?",  "1",
+    "Home","Replace Trebuchet with Google Now Launcher?",   "1",
+    "Calendar","Replace Stock Calendar with Google Calendar?",  "0"
+);
+
+# BACKUP
+ini_set("text_yes", "BACKUP");
+ini_set("text_no",  "DON'T BACKUP");
+    if
+        confirm("BACKUP", "Do you want to Backup your Selections?")=="yes"
+    then
+        exec("/sbin/busybox", "cp", "/tmp/aroma/gapps.prop", "/sdcard/Baked/backups");
+        exec("/sbin/busybox", "cp", "/tmp/aroma/replacer.prop", "/sdcard/Baked/backups");
+    else
+        sleep(0)
+    endif;
+
+# INSTALL
+viewbox("Ready to Install", "Press Next to begin the install.\n\n"+"If you want to review your installation settings, press Back.", "");
+
+ini_set("text_yes", "Yes");
+ini_set("text_no",  "No");
+install("Installing", "<b>"+ini_get("rom_name")+"</b> is being installed.", "", "<b>"+ini_get("rom_name")+"</b> has been successfully installed.");
+
+# Set Next Text fo Finish
+ini_set("text_next", "Finish");
+
+viewbox(
+  "Installation Completed",
+  "<#c00>Congratulations...</#>\n\n"+
+  "<#c00>" + ini_get("rom_name") + "</#>\n\n"+
+  "has been installed successfully.\n\n\n"+
+  "Press Finish, and Reboot your phone.\n\nThanks",
+  "icons/info"
+);
+
+if
+  confirm(
+      "Reboot",
+      "Reboot Now",
+      "icons/info",
+      "Reboot",
+      "No"
+  )=="yes"
+then
+  reboot("onfinish");
+endif;

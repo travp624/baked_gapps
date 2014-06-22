@@ -1,0 +1,327 @@
+# Checking to make certain user has a 4.4.x ROM Installed - If not, we abort
+ifelse(
+    is_substring("4.4", file_getprop("/system/build.prop","ro.build.version.release")),
+    (
+        ui_print("Android 4.4.x ROM detected");
+        ui_print(" ");
+    ),
+    (
+        ui_print("**** Incompatible Android ROM detected ****");
+        ui_print(" ");
+        ui_print("Baked gapps are for Android 4.4.x ONLY");
+        ui_print(" ");
+        ui_print("******** Baked gapps Installation failed *******");
+        ui_print(" ");
+        ui_print("Unmounting system...");
+        run_program("/sbin/busybox", "umount", "/system");
+        ui_print(" ");
+        sleep(7);
+        abort("Aborting...");
+    )
+);
+
+# PREP
+package_extract_file("install-prep.sh", "/tmp/install-prep.sh");
+set_perm(0, 0, 0777, "/tmp/install-prep.sh");
+run_program("/tmp/install-prep.sh", "");
+
+# EXTRA WORK
+set_progress(0.17);
+# Removing pieces that may be left over from other GApps or ROM's
+delete(
+    "/system/app/BrowserProviderProxy.apk",
+    "/system/app/Calendar.apk",
+    "/system/app/Gmail.apk",
+    "/system/app/GmsCore.apk",
+    "/system/app/GoogleCalendar.apk",
+    "/system/app/GoogleCalendarSyncAdapter.apk",
+    "/system/app/GoogleCloudPrint.apk",
+    "/system/app/GoogleHangouts.apk",
+    "/system/app/GoogleKeep.apk",
+    "/system/app/GooglePlus.apk",
+    "/system/app/PartnerBookmarksProvider.apk",
+    "/system/app/QuickSearchBox.apk",
+    "/system/app/Talk.apk",
+    "/system/app/Vending.apk",
+    "/system/app/Youtube.apk",
+    "/system/priv-app/Calendar.apk",
+    "/system/priv-app/GmsCore.apk",
+    "/system/priv-app/GoogleNow.apk",
+    "/system/priv-app/OneTimeInitializer.apk",
+    "/system/priv-app/QuickSearchBox.apk",
+    "/system/priv-app/Vending.apk"
+);
+
+# Remove apps from 'app' that need to be installed in 'priv-app'
+delete(
+    "/system/app/CalendarProvider.apk",
+    "/system/app/GoogleBackupTransport.apk",
+    "/system/app/GoogleFeedback.apk",
+    "/system/app/GoogleLoginService.apk",
+    "/system/app/GoogleOneTimeInitializer.apk",
+    "/system/app/GooglePartnerSetup.apk",
+    "/system/app/GoogleServicesFramework.apk",
+    "/system/app/OneTimeInitializer.apk",
+    "/system/app/Phonesky.apk",
+    "/system/app/PrebuiltGmsCore.apk",
+    "/system/app/SetupWizard.apk",
+    "/system/app/talkback.apk",
+    "/system/app/Velvet.apk",
+    "/system/app/Wallet.apk"
+);
+
+# Remove .odex files from early 4.4 GApps packages
+delete(
+    "/system/app/CalendarGoogle.odex",
+    "/system/app/GenieWidget.odex",
+    "/system/app/Gmail2.odex",
+    "/system/app/GoogleContactsSyncAdapter.odex",
+    "/system/app/GoogleEars.odex",
+    "/system/app/GoogleTTS.odex",
+    "/system/app/Keep.odex",
+    "/system/app/LatinImeGoogle.odex",
+    "/system/app/MediaUploader.odex",
+    "/system/framework/com.google.android.maps.odex",
+    "/system/framework/com.google.android.media.effects.odex",
+    "/system/framework/com.google.widevine.software.drm.odex",
+    "/system/priv-app/CalendarProvider.odex",
+    "/system/priv-app/GoogleBackupTransport.odex",
+    "/system/priv-app/GoogleFeedback.odex",
+    "/system/priv-app/GoogleLoginService.odex",
+    "/system/priv-app/GooglePartnerSetup.odex",
+    "/system/priv-app/GoogleServicesFramework.odex",
+    "/system/priv-app/OneTimeInitializer.odex",
+    "/system/priv-app/SetupWizard.odex"
+);
+
+# Removing obsolete libs from previous versions of Google+ (PlusOne)
+delete(
+    "/system/lib/libfacetracker.so",
+    "/system/lib/libfrsdk.so",
+    "/system/lib/libplus_jni_v8.so",
+    "/system/lib/librs.antblur.so",
+    "/system/lib/librs.antblur_constant.so",
+    "/system/lib/librs.antblur_drama.so",
+    "/system/lib/librs.drama.so",
+    "/system/lib/librs.film_base.so",
+    "/system/lib/librs.fixedframe.so",
+    "/system/lib/librs.grey.so",
+    "/system/lib/librs.image_wrapper.so",
+    "/system/lib/librs.retrolux.so",
+    "/system/lib/librsjni.so",
+    "/system/lib/libRSSupport.so",
+    "/system/lib/libstlport_shared.so"
+);
+
+# Removing obsolete libs from previous versions of Google TTS (GoogleTTS)
+delete("/system/lib/libpatts_engine_jni_api.so","/system/lib/libpatts_engine_jni_api_ub.so");
+
+# Removing obsolete lib from previous versions of Google Search (Velvet)
+delete("/system/lib/libmicro_hotword_jni.so");
+
+# Removing obsolete lib from previous versions of Chrome Browser (Chrome)
+delete("/system/lib/libchromeview.so");
+
+# Removing a 'Rogue' Keyboard app found in Velocity (and possibly other) ROM's (since we're adding Google Keyboard)
+delete("/system/app/GoogleLatinIme.apk");
+
+# Removing MediaUploader (since Google removed it beginning with 4.4.1)
+delete("/system/app/MediaUploader.apk");
+
+# CORE APPS
+set_progress(0.23);
+ui_print("Installing Core Apps");
+package_extract_dir("core", "/system");
+
+# GAPPS
+ui_print("Installing Google Apps");
+# Google+
+set_progress(0.27);
+ui_print("  Plus");
+if file_getprop("/tmp/aroma/gapps.prop", "item.1.1") == "1" then
+    ui_print("      Google+");
+    package_extract_dir("gapps/Plus/Plus", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.1.2") == "1" then
+    ui_print("      Hangouts");
+    package_extract_dir("gapps/Plus/Hangouts", "/system");
+endif;
+
+# Google Drive
+set_progress(0.29);
+ui_print("  Drive");
+if file_getprop("/tmp/aroma/gapps.prop", "item.2.1") == "1" then
+    ui_print("      Drive");
+    package_extract_dir("gapps/Drive/Drive", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.2.2") == "1" then
+    ui_print("      Keep");
+    package_extract_dir("gapps/Drive/Keep", "/system");
+endif;
+
+# Google Play
+set_progress(0.35);
+ui_print("  Play");
+if file_getprop("/tmp/aroma/gapps.prop", "item.3.1") == "1" then
+    ui_print("      Books");
+    package_extract_dir("gapps/Play/Books", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.3.2") == "1" then
+    ui_print("      Games");
+    package_extract_dir("gapps/Play/Games", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.3.3") == "1" then
+    ui_print("      Movies & TV");
+    package_extract_dir("gapps/Play/Videos", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.3.4") == "1" then
+    ui_print("      Music");
+    package_extract_dir("gapps/Play/Music", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.3.5") == "1" then
+    ui_print("      Newsstand");
+    package_extract_dir("gapps/Play/News", "/system");
+    # Deleting Google Currents
+    delete("/system/app/Currents.apk","/system/priv-app/Currents.apk");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.3.6") == "1" then
+    ui_print("      Voice");
+    package_extract_dir("gapps/Play/Voice", "/system");
+endif;
+
+# Google Search
+set_progress(0.43);
+ui_print("  Search");
+if file_getprop("/tmp/aroma/gapps.prop", "item.4.1") == "1" then
+    ui_print("      Chrome");
+    package_extract_dir("gapps/Search/Chrome", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.4.2") == "1" then
+    ui_print("      Home");
+    package_extract_dir("gapps/Search/GEL", "/system");
+    # Installing Google Now
+    package_extract_dir("gapps/Search/Now", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.4.3") == "1" then
+    ui_print("      Maps");
+    package_extract_dir("gapps/Search/Maps", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.4.4") == "1" then
+    ui_print("      Now");
+    package_extract_dir("gapps/Search/Now", "/system");
+endif;
+
+# Other GApps
+set_progress(0.51);
+ui_print("  Other");
+if file_getprop("/tmp/aroma/gapps.prop", "item.5.1") == "1" then
+    ui_print("      Calendar");
+    package_extract_dir("gapps/Other/Calendar", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.5.2") == "1" then
+    ui_print("      Camera");
+    package_extract_dir("gapps/Other/Camera", "/system");
+    # Removing Stock/AOSP Camera
+      delete(
+      "/system/app/Camera.apk",
+      "/system/app/Camera2.apk",
+      "/system/priv-app/Camera.apk",
+      "/system/priv-app/Camera2.apk"
+      );
+    # Removing camera .odex files from early 4.4 GApps packages
+      delete("/system/app/GoogleCamera.odex");
+    # Removing obsolete addon.d backup script from earlier PA Stock GApps or GoogleCamera Addon
+      delete("/system/addon.d/74-googlecamera.sh");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.5.3") == "1" then
+    ui_print("      Gmail");
+    package_extract_dir("gapps/Other/Gmail", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.5.4") == "1" then
+    ui_print("      Keyboard");
+    package_extract_dir("gapps/Other/Keyboard", "/system");
+    delete("/system/app/LatinIME.apk","/system/priv-app/LatinIME.apk","/system/lib/libjni_latinime.so");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.5.5") == "1" then
+    ui_print("      Wallet");
+    package_extract_dir("gapps/Other/Wallet", "/system");
+endif;
+
+if file_getprop("/tmp/aroma/gapps.prop", "item.5.6") == "1" then
+    ui_print("      YouTube");
+    package_extract_dir("gapps/Other/YouTube", "/system");
+endif;
+
+# REPLACER
+ui_print("Running Replacer...");
+    # SMS
+    if file_getprop("/tmp/aroma/replacer.prop", "item.0.1") == "1" then
+    ui_print("  Replacing SMS...");
+        delete("/system/app/Mms.apk", "/system/priv-app/Mms.apk");
+        package_extract_file("addon.d/80-hangouts.sh", "/system/addon.d/80-hangouts.sh");
+    endif;
+
+    # BROWSER
+    if file_getprop("/tmp/aroma/replacer.prop", "item.0.2") == "1" then
+        ui_print("  Replacing Browser...");
+        delete("/system/app/Browser.apk","/system/priv-app/Browser.apk","/system/app/ChromeBookmarksSyncAdapter.apk","/system/priv-app/ChromeBookmarksSyncAdapter.apk");
+        package_extract_file("addon.d/80-chrome.sh","/system/addon.d/80-chrome.sh");
+    endif;
+
+    # HOME
+    if file_getprop("/tmp/aroma/replacer.prop", "item.0.3") == "1" then
+        ui_print("  Replacing AOSP Launcher...");
+        delete("/system/app/Launcher3.apk","/system/priv-app/Launcher3.apk","/system/app/Launcher2.apk","/system/priv-app/Launcher2.apk");
+        package_extract_file("addon.d/80-home.sh","/system/addon.d/80-home.sh");
+    endif;
+    if file_getprop("/tmp/aroma/replacer.prop", "item.0.4") == "1" then
+        ui_print("  Replacing Trebuchet...");
+        delete("/system/app/Trebuchet.apk","/system/priv-app/Trebuchet.apk");
+        package_extract_file("addon.d/81-home.sh","/system/addon.d/81-home.sh");
+    endif;
+
+    # CALENDAR
+    if file_getprop("/tmp/aroma/replacer.prop", "item.0.5") == "1" then
+        ui_print("  Replacing Calendar...");
+        delete("/system/app/Calendar.apk","/system/priv-app/Calendar.apk");
+        package_extract_file("addon.d/80-calendar.sh","/system/addon.d/80-calendar.sh");
+    endif;
+
+# FACEUNLOCK
+if file_getprop("/tmp/info.prop","install.faceunlock") == "true" then
+    ui_print("Installing FaceUnlock... :-)");
+    # Remove stock .odex file
+    delete("/system/app/FaceLock.odex");
+    package_extract_dir("face", "/system");
+    set_perm(0, 0, 0755, "/system/addon.d/71-faceunlock.sh");
+else
+    ui_print("No FaceUnlock... :-(");
+endif;
+
+# PERMS
+ui_print("Setting Permissions");
+set_perm_recursive(0, 0, 0755, 0644, "/system/addon.d");
+set_perm_recursive(0, 0, 0755, 0644, "/system/app");
+set_perm_recursive(0, 0, 0755, 0644, "/system/priv-app");
+
+# UNMOUNT
+ui_print("Unmounting system...");
+run_program("/sbin/busybox", "umount", "/system");
+
+# FINISH
+ui_print("Finished Install");
+set_progress(1);
